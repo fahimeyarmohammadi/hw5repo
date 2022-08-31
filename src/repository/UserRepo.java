@@ -16,8 +16,8 @@ public class UserRepo {
         Connection connection = MyConnection.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("create table articletbl" +
                 " ( id int primary key not null," +
-                " username varchar(50) not null," + " nationalCod varchar(50) not null," +
-                " password varchar (50) not null," + " creatDate Date not null," + " iPublished boolean ," + " userId int not null)");
+                " title varchar(50) not null," + " brief varchar(50) not null," +
+                " content varchar (50) not null," + " creatDate Date not null," + " isPublished boolean ," + " userId int not null)");
         preparedStatement.executeUpdate();
         connection.close();
     }
@@ -26,8 +26,8 @@ public class UserRepo {
         Connection connection = MyConnection.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("create table usertable " +
                 " ( id int primary key not null," +
-                " title varchar(50) not null," + " brief varchar(50) not null," +
-                " content varchar (50) not null," + " birthday Date not null)");
+                " username varchar(50) not null," + " nationalCode varchar(50) not null," +
+                " password varchar (50) not null," + " birthday Date not null)");
         preparedStatement.executeUpdate();
         connection.close();
     }
@@ -46,8 +46,8 @@ public class UserRepo {
     public void editMyArticle(int id, String title, String brief, String content, Date createDate, boolean ispublished, int userId) throws SQLException {
         Connection connection = MyConnection.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("UPDATE articletbl" +
-                " SET title=?,brief=?, content=?,creatDate=?,isPublished=? " +
-                "WHERE id=?,userId=?;");
+                " SET title=?,brief=?, content=?,creatDate=?,isPublished=? , userId=?" +
+                "WHERE id=?");
 
 
         preparedStatement.setString(1, title);
@@ -65,15 +65,14 @@ public class UserRepo {
 
     public List<Article> viewMyArticle(int id) throws SQLException {
         Connection connection = MyConnection.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("select from articletbl " +
-                "where userId=? )");
+        PreparedStatement preparedStatement = connection.prepareStatement("(select * from articletbl " +
+                " where userId=? )");
 
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         List<Article> list = new ArrayList<>();
         while (resultSet.next()) {
-            Article article = null;
-            article = new Article(
+            Article article= new Article(
                     resultSet.getInt(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -90,7 +89,8 @@ public class UserRepo {
 
     public void insertArticle(Article article) throws SQLException {
         Connection connection = MyConnection.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("insert into articletbl values (?,?,?,?,?,?,?)");
+        PreparedStatement preparedStatement =connection.prepareStatement("insert into articletbl values (?,?,?,?,?,?,?)");
+
         {
             preparedStatement.setInt(1, article.getId());
             preparedStatement.setString(2, article.getTitle());
@@ -105,8 +105,8 @@ public class UserRepo {
     }
     public void changePassword(int id, String password) throws SQLException {
         Connection connection = MyConnection.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE usertable" +
-                "set password=? where id=?");
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE usertable " +
+                " set password=? where id=?");
         preparedStatement.setString(1,password );
         preparedStatement.setInt(2, id);
         preparedStatement.executeUpdate();
@@ -144,8 +144,8 @@ public class UserRepo {
 
     public Article viewCompleteArticle(int id) throws SQLException {
         Connection connection = MyConnection.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("select title ,brief from articletbl" +
-                " where id? ");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from articletbl" +
+                " where id=? ");
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         Article article = null;
