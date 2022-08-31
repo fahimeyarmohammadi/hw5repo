@@ -114,7 +114,7 @@ public class UserRepo {
     }
     public void register(User user) throws SQLException {
         Connection connection = MyConnection.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("insert into usertable values (?,?,?,?,?,)");
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into usertable values (?,?,?,?,?)");
         preparedStatement.setInt(1, user.getId() );
         preparedStatement.setString(2, user.getUsername() );
         preparedStatement.setString(3, user.getNationalCode() );
