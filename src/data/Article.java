@@ -21,6 +21,11 @@ public class Article {
         this.userId = userId;
     }
 
+    public Article(String title, String brief) {
+        this.title = title;
+        this.brief = brief;
+    }
+
     public int getId() {
         return id;
     }
