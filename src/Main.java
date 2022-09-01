@@ -2,12 +2,10 @@ import data.Article;
 import data.User;
 import repository.UserRepo;
 
-import javax.xml.crypto.Data;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -44,7 +42,7 @@ public class Main {
                 if (login == 1) {
                     System.out.println("enter your id");
                     id = parseInt(scanner.nextLine());
-                    List<Article> myArticle =userRepo.viewMyArticle(id);
+                    List<Article> myArticle = userRepo.viewMyArticle(id);
                     for (int i = 0; i < myArticle.size(); i++) {
                         System.out.println(myArticle.get(i));
                     }
@@ -61,13 +59,7 @@ public class Main {
                     System.out.println("content");
                     String content = scanner.nextLine();
                     System.out.println("creatDate");
-                    System.out.println("year");
-                    String year = scanner.nextLine();
-                    System.out.println("moon");
-                    String moon = scanner.nextLine();
-                    System.out.println("day");
-                    String day = scanner.nextLine();
-                    Date creatDate = Date.valueOf(year + "-" + moon + "-" + day);
+                    Date creatDate = getDate(scanner);
                     System.out.println("isPublished if yes enter 1 else enter 0");
                     int ispublishe = parseInt(scanner.nextLine());
                     if (ispublishe == 1)
@@ -84,19 +76,15 @@ public class Main {
                     String articleBrief = scanner.nextLine();
                     System.out.println("enter content");
                     String articleContent = scanner.nextLine();
-                    System.out.println("enter creat date year");
-                    String year = scanner.nextLine();
-                    System.out.println("moon");
-                    String moon = scanner.nextLine();
-                    System.out.println("day");
-                    String day = scanner.nextLine();
-                    Date creatDate = Date.valueOf(year + "-" + moon + "-" + day);
+                    System.out.println("enter creat date");
+                    Date creatDate = getDate(scanner);
                     System.out.println("isPublished if yes enter 1 else enter 0");
 
-                    if ( parseInt(scanner.nextLine())== 1) {
+                    if (parseInt(scanner.nextLine()) == 1) {
                         isPublished = true;
-                    }else{
-                    isPublished = false;}
+                    } else {
+                        isPublished = false;
+                    }
                     System.out.println("enter your id");
                     int identity = parseInt(scanner.nextLine());
                     Article article = new Article(articleId, articleTitle, articleBrief, articleContent, creatDate, isPublished, identity);
@@ -118,24 +106,16 @@ public class Main {
             System.out.println("enter your nationalcode");
             nationalCode = scanner.nextLine();
             password = nationalCode;
-            System.out.println("enter birthday date year");
-            String year = scanner.nextLine();
-            System.out.println("moon");
-            String moon = scanner.nextLine();
-            System.out.println("day");
-            String day = scanner.nextLine();
-            Date birthday = Date.valueOf(year + "-" + moon + "-" + day);
-
-            User user = new User(2, username, nationalCode, password, birthday);
+            System.out.println("enter birthday date ");
+            Date birthday = getDate(scanner);
+            User user = new User(3, username, nationalCode, password, birthday);
             userRepo.register(user);
         }
         if (temp == 3) {
             List<Article> allArticle = new ArrayList<>();
             allArticle = userRepo.viewArticle();
             for (int i = 0; i < allArticle.size(); i++) {
-                System.out.println(allArticle.get(i)+"\n");
-            }
-
+                System.out.println(allArticle.get(i) + "\n");
             }
             System.out.println("if you want to view complete article enter that id else enter 0");
             id = parseInt(scanner.nextLine());
@@ -143,10 +123,19 @@ public class Main {
                 Article article = userRepo.viewCompleteArticle(id);
                 System.out.println(article);
             }
-            if(temp==4){
-
-            }
         }
-
+        if (temp == 4) {
+        }
     }
 
+    private static Date getDate(Scanner scanner) {
+        System.out.println("year");
+        String year = scanner.nextLine();
+        System.out.println("moon");
+        String moon = scanner.nextLine();
+        System.out.println("day");
+        String day = scanner.nextLine();
+        Date creatDate = Date.valueOf(year + "-" + moon + "-" + day);
+        return creatDate;
+    }
+}

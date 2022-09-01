@@ -38,6 +38,7 @@ public class UserRepo {
         preparedStatement.setString(1, username);
         preparedStatement.setString(2, password);
         ResultSet resultSet = preparedStatement.executeQuery();
+        connection.close();
         if (resultSet != null)
             return true;
         return false;
@@ -49,7 +50,6 @@ public class UserRepo {
                 " SET title=?,brief=?, content=?,creatDate=?,isPublished=? , userId=?" +
                 "WHERE id=?");
 
-
         preparedStatement.setString(1, title);
         preparedStatement.setString(2, brief);
         preparedStatement.setString(3, content);
@@ -60,7 +60,6 @@ public class UserRepo {
 
         preparedStatement.executeUpdate();
         connection.close();
-
     }
 
     public List<Article> viewMyArticle(int id) throws SQLException {
@@ -72,7 +71,7 @@ public class UserRepo {
         ResultSet resultSet = preparedStatement.executeQuery();
         List<Article> list = new ArrayList<>();
         while (resultSet.next()) {
-            Article article= new Article(
+            Article article = new Article(
                     resultSet.getInt(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -89,7 +88,7 @@ public class UserRepo {
 
     public void insertArticle(Article article) throws SQLException {
         Connection connection = MyConnection.getConnection();
-        PreparedStatement preparedStatement =connection.prepareStatement("insert into articletbl values (?,?,?,?,?,?,?)");
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into articletbl values (?,?,?,?,?,?,?)");
 
         {
             preparedStatement.setInt(1, article.getId());
@@ -103,31 +102,34 @@ public class UserRepo {
         }
         connection.close();
     }
+
     public void changePassword(int id, String password) throws SQLException {
         Connection connection = MyConnection.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("UPDATE usertable " +
                 " set password=? where id=?");
-        preparedStatement.setString(1,password );
+        preparedStatement.setString(1, password);
         preparedStatement.setInt(2, id);
         preparedStatement.executeUpdate();
         connection.close();
     }
+
     public void register(User user) throws SQLException {
         Connection connection = MyConnection.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("insert into usertable values (?,?,?,?,?)");
-        preparedStatement.setInt(1, user.getId() );
-        preparedStatement.setString(2, user.getUsername() );
-        preparedStatement.setString(3, user.getNationalCode() );
-        preparedStatement.setString(4, user.getPassword() );
+        preparedStatement.setInt(1, user.getId());
+        preparedStatement.setString(2, user.getUsername());
+        preparedStatement.setString(3, user.getNationalCode());
+        preparedStatement.setString(4, user.getPassword());
         preparedStatement.setDate(5, (java.sql.Date) user.getBirthday());
         preparedStatement.executeUpdate();
         connection.close();
     }
-    public List<Article> viewArticle( ) throws SQLException {
+
+    public List<Article> viewArticle() throws SQLException {
         Connection connection = MyConnection.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("select title ,brief from articletbl"+
+        PreparedStatement preparedStatement = connection.prepareStatement("select title ,brief from articletbl" +
                 " where isPublished=? ");
-        preparedStatement.setBoolean(1, true );
+        preparedStatement.setBoolean(1, true);
         ResultSet resultSet = preparedStatement.executeQuery();
         List<Article> list = new ArrayList<>();
         while (resultSet.next()) {
@@ -150,7 +152,6 @@ public class UserRepo {
         ResultSet resultSet = preparedStatement.executeQuery();
         Article article = null;
         while (resultSet.next()) {
-
             article = new Article(
                     resultSet.getInt(1),
                     resultSet.getString(2),
@@ -159,10 +160,9 @@ public class UserRepo {
                     resultSet.getDate(5),
                     resultSet.getBoolean(6),
                     resultSet.getInt(7)
-                    );
+            );
         }
         connection.close();
         return article;
     }
 }
-
